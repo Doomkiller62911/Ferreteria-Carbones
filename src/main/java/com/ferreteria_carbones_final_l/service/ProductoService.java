@@ -1,6 +1,7 @@
-package com.tienda_l.service;
-import com.tienda_l.domain.Producto;
-import com.tienda_l.repository.ProductoRepository;
+package com.ferreteria_carbones_final_l.service;
+
+import com.ferreteria_carbones_final_l.domain.Producto;
+import com.ferreteria_carbones_final_l.repository.ProductoRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -12,31 +13,31 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ProductoService {
-    
+
     @Autowired
     private ProductoRepository productoRepository;
-    
-    @Transactional(readOnly =true)
+
+    @Transactional(readOnly = true)
     public List<Producto> getProductos(boolean activo) {
         if (activo) {
             return productoRepository.findByActivoTrue();
         }
         return productoRepository.findAll();
     }
-    
-    @Transactional(readOnly =true)
+
+    @Transactional(readOnly = true)
     public Optional<Producto> getProducto(Integer idProducto) {
         return productoRepository.findById(idProducto);
-    
+
     }
-    
+
     @Autowired
     private FirebaseStorageService firebaseStorageService;
-    
+
     @Transactional
-    public void save (Producto producto, MultipartFile imagenFile){
+    public void save(Producto producto, MultipartFile imagenFile) {
         producto = productoRepository.save(producto);
-        if (!imagenFile.isEmpty()){
+        if (!imagenFile.isEmpty()) {
             try {
                 String rutaImagen = firebaseStorageService.uploadImage(
                         imagenFile,
@@ -44,24 +45,24 @@ public class ProductoService {
                         producto.getIdProducto());
                 producto.setRutaImagen(rutaImagen);
                 productoRepository.save(producto);
-            } catch(IOException ex){
-                
+            } catch (IOException ex) {
+
             }
         }
-        
+
     }
-    
+
     @Transactional
-    public void delete(Integer idProducto){
-        if (!productoRepository.existsById(idProducto)){
-            throw new IllegalArgumentException("La categoría no existe. ID:"+idProducto); 
+    public void delete(Integer idProducto) {
+        if (!productoRepository.existsById(idProducto)) {
+            throw new IllegalArgumentException("La categoría no existe. ID:" + idProducto);
         }
         try {
             productoRepository.deleteById(idProducto);
-        } catch (DataIntegrityViolationException ex){
+        } catch (DataIntegrityViolationException ex) {
             throw new IllegalStateException("No se puede eliminar pues tiene datos asociados");
         }
-        
+
     }
-            
+
 }

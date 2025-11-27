@@ -1,21 +1,25 @@
-package com.tienda_l.service;
+package com.ferreteria_carbones_final_l.service;
+
 /*Esta calse es la de subir imagenes a la nube. Recibe el archivo donde está la
 imagen, asi igual su folder, y el iD de la imagen.
-*/
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
+ */
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+
 @Service
 public class FirebaseStorageService {
+
     @Value("${firebase.bucket.name}")
     private String bucketName;
     @Value("${firebase.storage.path}")
@@ -51,7 +55,7 @@ public class FirebaseStorageService {
     }
 
     //Convierte un MultipartFile a un archivo temporal en el servidor.
-     private File convertToFile(MultipartFile multipartFile) throws IOException {
+    private File convertToFile(MultipartFile multipartFile) throws IOException {
         File tempFile = File.createTempFile("upload-", ".tmp");
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(multipartFile.getBytes());

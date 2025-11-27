@@ -1,4 +1,7 @@
-package com.tienda_l.domain;
+package com.ferreteria_carbones_final_l.domain;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,54 +11,53 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.io.Serializable;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-import jakarta.validation.constraints.*;
-import java.math.BigDecimal;
-
-
 
 @Data
 @Entity
-@Table(name="producto")
+@Table(name = "producto")
 public class Producto implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_producto")
+    @Column(name = "id_producto")
     private Integer idProducto;
     //private Integer idCategoria;
-    
-    @Column(unique=true, nullable=false, length=50)
+
+    @Column(unique = true, nullable = false, length = 50)
     @NotNull
-    @Size(max=50)
+    @Size(max = 50)
     private String descripcion;
-    
+
     @Column(columnDefinition = "TEXT")
     private String detalle;
-    
+
     //Estas son restricciones a la base de datos, para validar.
-    @Column(precision = 12,scale=2)
-    @NotNull(message="El precio no puede ser nulo...")
-    @DecimalMin(value="0.00",inclusive=true, message="El precio debe ser mayor o igual a 0...")    
+    @Column(precision = 12, scale = 2)
+    @NotNull(message = "El precio no puede ser nulo...")
+    @DecimalMin(value = "0.00", inclusive = true, message = "El precio debe ser mayor o igual a 0...")
     private BigDecimal precio;
-    
+
     //Estas son restricciones a la base de datos, para validar.
-    @NotNull(message="Las existencias no pueden ser nulas...")
-    @Min(value=0, message="Las existencias deben ser mayor o igual a 0")    
+    @NotNull(message = "Las existencias no pueden ser nulas...")
+    @Min(value = 0, message = "Las existencias deben ser mayor o igual a 0")
     private int existencias;
-    
-    @Column (length=1024)
-    @Size(max=1024)
+
+    @Column(length = 1024)
+    @Size(max = 1024)
     private String rutaImagen;
     private boolean activo;
-    
+
     @ManyToOne
-    @JoinColumn(name="id_categoria") //Define la llave primaria y su relación
+    @JoinColumn(name = "id_categoria") //Define la llave primaria y su relación
     private Categoria categoria; //Esto nos permite recolectar la información del producto.
-    
+
 }
 
 /*
@@ -71,4 +73,4 @@ create table producto (
   unique (descripcion),
   index ndx_descripcion (descripcion))
   ENGINE = InnoDB;
-*/
+ */
